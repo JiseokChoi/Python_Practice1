@@ -1,5 +1,6 @@
 '''
 ### 파이썬 자료구조
+# 자료 구조의 목적 : 데이터를 효율적으로 저장하고, 저장한 데이터를 효율적으로 찾는 것
 
 ## 배열(Array)
 
@@ -288,7 +289,7 @@ print(doubly_linked)
 del_node = doubly_linked.get_node_at(3)
 doubly_linked.delete(del_node)  # 주어진 노도 삭제 연산
 print(doubly_linked)
-'''
+
 
 ## 해시 테이블(Hash Table)
 # 하나의 key와 그 key에 해당하는 value를 합쳐서 : key-value 쌍
@@ -675,4 +676,601 @@ print(set1)
 # 탐색 : O(1) (평균) / 삽입 : O(1) (평균) / 삭제 : O(1) (평균) / 길이 확인 : O(1)
 
 
+## 트리
+# 데이터의 상-하 관계(계층적 관계)를 저장하는 자료구조
+# 다양한 추상 자료형의 구현이 가능 ex) 우선순위 큐, 딕셔너리, 세트 등
 
+# 루트(root) 노드 : 트리의 시작 노드
+# 부모 노드 : 특정 노드의 직속 상위 노드
+# 자식 노드 : 특정 노드의 직속 하위 노드
+# 형제 노드 : 같은 부모를 갖는 노드
+# leaf 노드(말단 노드) : 자식 노드를 갖고 있지 않은, 가장 말단에 있는 노드
+# 깊이 : 특정 노드가 root 노드에서 떨어져 있는 거리 (root 노드의 자식 노드의 깊이는 1)
+# 레벨 : 깊이 + 1. 깊이와 거의 같은 개념 (root 노드의 자식 노드의 레벨은 2)
+# 높이 : 트리에서 가장 깊이 있는 노드의 깊이
+# 부분 트리(sub-tree) : 현재 트리의 일부분을 이루고 있는 더 작은 트리
+
+
+## 이진 트리
+# 각 노드가 최대 2개의 자식 노드를 가질 수 있는 트리
+
+class Node:
+    """이진 트리 노드 클래스"""
+
+    def __init__(self,data):
+        """데이터와 두 자식 노드에 대한 레퍼런스를 갖는다"""
+        self.data = data
+        self.left_child = None
+        self.right_child = None
+
+
+# 데이터 할당
+root_node = Node(2)
+node_B = Node(3)
+node_C = Node(5)
+node_D = Node(8)
+node_E = Node(13)
+
+# 노드 지정
+root_node.left_child = node_B
+root_node.right_child = node_C
+node_B.left_child = node_D
+node_B.right_child = node_E
+
+# root 노드의 왼쪽 자식 노드 가져오기
+test_node_1 = root_node.left_child
+print(test_node_1.data)
+
+
+# 정 이진 트리(Full Binary Tree)
+# 모든 노드가 모든 노드가 2개 도는 0개의 자식을 갖는 이진 트리
+
+# 완전 이진 트리(Complete Binary Tree)
+# 마지막 레벨 직전의 레벨까지는 모든 노드들이 다 채워진 트리
+# 조건 : 마지막 레벨에서는 노드들이 다 채워질 필요는 없더라도, 왼쪽부터 오른쪽 방향으로는 노드들이 다 채워져야 한다.
+# 성질 : 완전 이진 트리 안에 저장된 노드가 n개라고 할 때, 높이는 항상 log(n)에 비례한다.
+
+# 포화 이진 트리(Perfect Binary Tree)
+# 모든 레벨이 빠짐 없이 노드로 채워져 있는 이진 트리
+# 완전 이진 트리와, 정 이진 트리의 특성을 모두 갖는다.
+# n + 1 = 2^(h+1) (n : 노드의 수, h : 높이)
+
+
+# 완전 이진 트리 배열(파이썬 리스트)에 저장하기
+complete_binary_tree = [None, 1, 5, 12, 11, 9, 10, 14, 2, 10]  # 첫 번째 인덱스 : root 노드
+
+# 완전 이진 트리 배열 자식 노드 찾는 방법
+# 2p (p : 부모 노드의 인덱스)
+# 2p + 1 (p : 부모 노드의 인덱스)
+
+# 완전 이진 트리 배열 부모 노드 찾는 방법
+# c // 2 (c : 자식 노드의 인덱스)
+
+def get_parent(complete_binary_tree: list, index):
+    """배열로 구현한 완전 이진 트리에서 index번째 노드의 부모 노드의 데이터 리턴"""
+    return complete_binary_tree[index // 2] if index != 0 else None  # root 노드일 경우, None 리턴
+
+def get_left_child(complete_binary_tree: list, index):
+    """배열로 구현한 완전 이진 트리에서 index번째 노드의 왼쪽 자식 노드의 데이터 리턴"""
+    return complete_binary_tree[index * 2] if index * 2 <= len(complete_binary_tree) else None  # 배열을 넘어가는 경우, None을 리턴
+
+def get_right_child(complete_binary_tree: list, index):
+    """배열로 구현한 완전 이진 트리에서 index번째 노드의 오른쪽 자식 노드의 데이터 리턴"""
+    return complete_binary_tree[index * 2 + 1] if index * 2 + 1 <= len(complete_binary_tree) else None  # 배열을 넘어가는 경우, None을 리턴
+
+
+# 순회
+# 자료 구조에 저장된 모든 데이터를 도는 것
+
+# 트리 순회
+# 트리를 순회하면 노드들 사이에 선형적 순서를 만들 수 있다.
+
+# 1.pre-order 순회
+# 1) 현재 노드 데이터 출력
+# 2) 재귀적으로 왼쪽 부분 트리 순회
+# #) 재귀적으로 오른쪽 부분 트리 순회
+
+# 2.post-order 순회
+# 1) 재귀적으로 왼쪽 부분 트리 순회
+# 2) 재귀적으로 오른쪽 부분 트리 순회
+# 3) 현재 노드 데이터를 출력
+
+# 3.in-order 순회
+# 1) 재귀적으로 왼쪽 부분 트리 순회
+# 2) 현재 노드 데이터를 출력
+# 3) 재귀적으로 오른쪽 부분 트리 순회
+
+class Node:
+    """이진 트리 노드 클래스"""
+
+    def __init__(self,data):
+        """데이터와 두 자식 노드에 대한 레퍼런스를 갖는다"""
+        self.data = data
+        self.left_child = None
+        self.right_child = None
+
+# 노드 생성
+node_A = Node("A")
+node_B = Node("B")
+node_C = Node("C")
+node_D = Node("D")
+node_E = Node("E")
+node_F = Node("F")
+node_G = Node("G")
+node_H = Node("H")
+node_I = Node("I")
+
+# 생성한 노드 인스턴스 연결
+node_F.left_child = node_B  # node_F : 루트 노드
+node_F.right_child = node_G
+
+node_B.left_child = node_A
+node_B.right_child = node_D
+
+node_D.left_child = node_C
+node_D.right_child = node_E
+
+node_G.right_child = node_I
+
+node_I.left_child = node_H
+
+def traverse_in_order(node):
+    """in-order 순회 함수"""
+    res_str = ""
+
+    if node.left_child is not None:  # 왼쪽 부분 트리 순회
+        traverse_in_order(node.left_child)
+
+    print(node.data, end = ' ')  # 데이터 출력
+
+    if node.right_child is not None:  # 오른쪽 부분 트리 순회
+        traverse_in_order(node.right_child)
+
+traverse_in_order(node_F)  # 루트 노드부터 in-order 순회
+
+
+## 힙(Heap)
+# 형태 속성 : 힙은 완전 이진 트리다.
+# 힙 속성 : 모든 노드의 데이터는 자식 노드들의 데이터보다 크거나 같다.
+
+def swap(tree, index_1, index_2):
+    """완전 이진 트리의 노드 index_1과 노드 index_2의 위치를 서로 바꾼다."""
+    tree[index_1], tree[index_2] = tree[index_2], tree[index_1]
+
+# heapify 함수 실행 시간 복잡도 : O(log(n))
+def heapify(tree, index, tree_size):
+    """heapify 함수"""
+
+    left_child_index = 2 * index  # 왼쪽 자식 노드 인덱스
+    right_child_index = 2 * index + 1  # 오른쪽 자식 노드 인덱스
+
+    largest = index  # 일단 부모 노드의 값이 가장 크다고 설정
+
+    # 왼쪽 자식 노드의 값과 비교
+    if 0 < left_child_index < tree_size and tree[largest] < tree[left_child_index]:
+        largest = left_child_index
+
+    # 오른쪽 자식 노드의 값과 비교
+    if 0 < right_child_index < tree_size and tree[largest] < tree[right_child_index]:
+        largest = right_child_index
+
+
+    if largest != index:  # 부모 노드의 값이 자식 노드의 값보다 작은 경우,
+        swap(tree, index, largest)  # 부모 노드와 최댓값을 가진 자식 노드의 위치를 서로 바꾼다.
+        heapify(tree, largest, tree_size)  # 자리가 바뀌어 자식 노드가 된 기존의 부모 노드를 대상으로 다시 heapfiy 함수를 호출한다. (힙 속성이 충족될 때까지 반복)
+
+test_tree = [None, 3,1,7, 12, 9, 13, 8, 6, 17, 2]
+
+
+# 힙 만드는 법
+# 마지막 인덱스부터 루트 노드의 인덱스까지 순서대로 heapify 함수를 실행한다.
+# 힙 만드는 과정 시간복잡도 : O(nlog(n))
+
+def making_heap(tree):
+    tree_size = len(test_tree)
+    for idx in range(tree_size - 1, 0, -1):  # O(n)
+        heapify(tree, idx, tree_size)  #O (log(n))
+
+print(test_tree) # 힙으로 만들어진 트리 출력
+
+
+## 힙 정렬(Heap sort)
+# 힙을 이용한 정렬 알고리즘 (시간 복잡도 : O(nlog(n)))
+# 1) 힙을 만든다.
+# 2) root와 마지막 노드를 바꿔준다.
+# 3) 바꾼 노드는 없는 노드 취급한다.
+# 4) 새로운 노드가 힙 속성을 지킬 수 있게 heapify 함수를 호출한다.
+# 5) 2 ~ 4번 과정을 모든 인덱스를 돌 때까지 반복한다.
+
+# 내림차순으로 정렬하고 싶을 경우-> 힙 속성을 반대로 바꾸고 똑같은 알고리즘을 적용하면 된다.
+
+def heap_sort(tree):
+    """힙 정렬(heap-sort) 메소드"""
+    tree_size = len(tree)
+
+    making_heap(tree) # 1번 과정
+
+    for i in range(tree_size - 1, 0, -1):  # 2 ~ 5번 과정
+        swap(tree, 1, i)
+        heapify(tree, 1, i)
+    print(tree)  # 힙 정렬된 트리 출력
+
+
+# test_code
+test_tree = [None, 3, 1, 7, 12, 9, 13, 8, 6, 17, 2]
+heap_sort(test_tree)
+
+
+## 우선순위 큐
+# 추상 자료형(내부적인 구현보다 기능에 집중하게 해주는 개념) 중 하나
+# 데이터를 저장할 수 있다.
+# 저장한 데이터가 우선 순위 순서대로 나온다.
+from queue import PriorityQueue
+
+priority_queue = PriorityQueue()  # 우선 순위에 있는 값이 작을수록 먼저 출력
+priority_queue.put((3, "철수"))  # 우선 순위 큐에 원소 추가
+priority_queue.put((1, "영희"))
+priority_queue.put((2, "민수"))
+priority_queue.put((6, "유리"))
+priority_queue.put((5, "민아"))
+priority_queue.put((4, "준수"))
+
+print(priority_queue.queue)  # 우선 순위 큐에 있는 원소들 출력
+print(priority_queue.get())  # 우선 순위 큐에 원소 삭제
+print(priority_queue.queue)
+
+
+# 힙에 데이터 삽입하기
+# 1) 힙의 마지막 인덱스에 데이터를 삽입한다.
+# 2) 삽입한 데이터와 부모 노드의 데이터를 비교한다.
+
+# 힙에서 최고 우선순위 데이터 추출하기 (최고 우선 순위 : 가장 큰 데이터(root_node의 데이터))
+# 1) root 노드와 마지막 노드를 서로 바꾼다.
+# 2) 마지막 노드의 데이터를 변수에 저장한다.
+# 3) 마지막 노드를 삭제한다.
+# 4) root 노드에 heapify를 호출해서 망가진 힙 속성을 고친다.
+# 변수에 저장한 데이터를 리턴한다.(최고 우선 순위 데이터)
+
+def reverse_heapify(tree, index):
+    """삽입된 노드를 힙 속성을 지키는 위치로 이동시키는 메소드"""
+    parent_index = index // 2  # 삽입된 노드의 부모 노드의 인덱스 계산
+
+    if (parent_index != 0) and (tree[index] > tree[parent_index]):
+        swap(tree, index, parent_index)
+        reverse_heapify(tree, parent_index)
+
+class PriorityQueue:
+    """힙으로 구현한 우선순위 큐 클래스"""
+    def __init__(self):
+        self.heap = [None]  # 파이썬 리스트로 구현한 힙
+
+    def __str__(self):
+        return str(self.heap)
+
+    def insert(self, data):
+        """삽입 메소드"""  # 시간 복잡도 : O(log(n))
+        self.heap.append(data)  # 맨 마지막 인덱스에 데이터 추가
+
+        reverse_heapify(self.heap, len(self.heap) - 1)  # 맨 마지막에 추가된 데이터에 대해 reverse_heapify 실행
+
+    def extract_max(self):
+        """최고 우선 순위 데이터 추출 메소드"""  # 시간 복잡도 : O(log(n))
+        swap(self.heap, 1, -1)  #
+        return_value = self.heap.pop()
+        heapify(self.heap, 1, len(self.heap))
+
+        return return_value
+
+
+# test_code
+priority_queue = PriorityQueue()
+
+priority_queue.insert(6)
+priority_queue.insert(9)
+priority_queue.insert(1)
+priority_queue.insert(3)
+priority_queue.insert(10)
+priority_queue.insert(11)
+priority_queue.insert(13)
+print(priority_queue)
+
+print(priority_queue.extract_max())
+print(priority_queue)
+
+
+# 여러가지 자료구조로 힙 구현 시 시간 복잡도
+# 정렬된 동적배열 - 데이터 삽입 : O(n), 데이터 추출 : O(1)
+# 정렬된 이중 연결 리스트 - 데이터 삽입 : O(n), 데이터 추출 : O(1)
+# 힙 - 데이터 삽입 : O(log(n)), 데이터 추출 : O(log(n))
+
+
+## 이진 탐색 트리(Binary Serach Tree)
+# 딕셔너리, 세트 등의 추상 자료형 구현 가능
+
+class Node:
+    """이진 탐색 트리 노드"""
+    def __init__(self, data):
+        self.data = data
+        self.parent = None  # 부모에 대한 레퍼런스
+        self.left_child = None
+        self.right_child = None
+
+def print_inorder(node):
+    """주어진 노드를 in-order로 출력해주는 함수"""
+    if node is not None:
+        print_inorder(node.left_child)
+        print(node.data, end = " ")
+        print_inorder(node.right_child)
+
+class BinarySearchTree:
+    """이진 탐색 트리 클래스"""
+    def __init__(self):
+        self.root = None
+
+    def insert(self, data):
+        """이진 탐색 트리 삽입 메소드. 해당 데이터를 가지고 있는 노드로 접근하여 그 노드를 리턴한다."""
+        new_node = Node(data)  # 삽입할 데이터를 갖는 새 노드 생성
+
+        # 트리가 비었으면 새로운 노드를 root 노드로 만든다
+        if self.root is None:
+            self.root = new_node
+            return
+
+        cur_node = self.root  # 삽입될 노드와 비교 대상이 될 노드
+
+        while True:
+            if cur_node.data <= new_node.data:  # 현재 노드의 데이터가, 삽입될 노드의 데이터보다 크거나 같은 경우
+                if cur_node.right_child is None:  # 오른쪽 노드가 비어 있는 경우
+                    cur_node.right_child = new_node  # 현재 노드의 오른쪽 자식 노드로 삽입
+                    new_node.parent = cur_node  # new_node의 부모 노드로 이전 노드 설정
+                    break
+                cur_node = cur_node.right_child  # 오른쪽 노드가 비어 있지 않은 경우
+            else:  # 현재 노드의 데이터가, 삽입될 노드의 데이터보다 작은 경우
+                if cur_node.left_child is None:  # 왼쪽 노드가 비어 있는 경우
+                    cur_node.left_child = new_node  # 현재 노드의 왼쪽 자식 노드로 삽입
+                    new_node.parent = cur_node  # new_node의 부모 노드로 이전 노드 설정
+                    break
+                cur_node = cur_node.left_child  # 왼쪽 노드가 비어 있지 않은 경우
+
+    def search(self, data):
+        """이진 탐색 트리 탐색 메소드, 찾는 데이터를 갖는 노드가 없으면 None을 리턴한다"""
+        current_node = self.root
+
+        while True:
+            if current_node is None:  # 현재 노드가 비어 있는 경우
+                return None  # None을 리턴
+            elif current_node.data < data:  # 현재 노드의 데이터가, 찾는 데이터보다 작은 경우
+                current_node = current_node.right_child  # 오른쪽 자식 노드로 이동
+            elif current_node.data > data:  # 현재 노드의 데이터가, 찾는 데이터보다 큰 경우
+                current_node = current_node.left_child  # 왼쪽 자식 노드로 이동
+            else:  # 현재 노드의 데이터와 찾는 데이터가 일치하는 경우
+                return current_node
+
+    def delete(self,data):
+        node_to_delete = self.search(data)  # 삭제할 노드를 가지고 온다.
+        parent_node = node_to_delete.parent  # 삭제할 노드의 부모 노드
+
+        # 경우 1) 삭제하려는 노드가 leaf 노드인 경우
+        if (node_to_delete.left_child is None) and (node_to_delete.right_child is None):
+            if node_to_delete is self.root:  # 삭제하려는 노드가 루트 노드인 경우
+                self.root = None
+            else:
+                if node_to_delete is parent_node.left_child:  # 삭제하려는 노드가 왼쪽 자식 노드인 경우
+                    parent_node.left_child = None
+                else:  # 삭제하려는 노드가 오른쪽 자식 노드인 경우
+                    parent_node.right_child = None
+
+        # 경우 2) 삭제하려는 노드의 자식이 하나인 노드일 경우
+        elif node_to_delete.left_child is None:  # 삭제하려는 노드의 오른쪽 자식 노드만 있는 경우
+            if node_to_delete is self.root:  # 루트 노드를 삭제하려는 경우
+                self.root = node_to_delete.right_child
+                self.root.parent = None
+            elif node_to_delete is parent_node.left_child:  # 삭제하려는 노드가 부모 노드의 왼쪽 자식 노드인 경우
+                parent_node.left_child = node_to_delete.right_child  # 부모 노드의 왼쪽 자식 노드로, 삭제하려는 노드의 오른쪽 자식 노드 연결
+                node_to_delete.right_child.parent = parent_node  # 삭제하려는 노드의 오른쪽 자식 노드의 부모 노드로, 삭제하려는 노드의 부모 노드 연결
+            else:  # 삭제하려는 노드가 부모 노드의 오른쪽 자식 노드인 경우
+                parent_node.right_child = node_to_delete.right_child
+                node_to_delete.right_child.parent = parent_node
+
+        elif node_to_delete.right_child is None:  # 삭제하려는 노드의 왼쪽 자식 노드만 있는 경우
+            if node_to_delete is self.root:  # 루트 노드를 삭제하려는 경우
+                self.root = node_to_delete.left_child
+                self.root.parent = None
+            elif node_to_delete is parent_node.left_child:  # 삭제하려는 노드가 부모 노드의 왼쪽 자식 노드인 경우
+                parent_node.left_child = node_to_delete.left_child
+                node_to_delete.left_child.parent = parent_node
+            else:  # 삭제하려는 노드가 부모 노드의 오른쪽 자식 노드인 경우
+                parent_node.right_child = node_to_delete.left_child
+                node_to_delete.left_child.parent = parent_node
+
+        # 경우 3) 삭제하려는 노드의 자식이 2개인 노드일 경우
+        elif node_to_delete.left_child and node_to_delete.right_child:
+            successor = self.find_min(node_to_delete.right_child)  # successor 노드 : 삭제하려는 노드의 오른쪽 자식 노드의 부분 트리 중, 최솟값을 갖는 노드
+            node_to_delete.data = successor.data  # successor 노드의 데이터를 삭제하려는 노드의 데이터에 넣는다.
+
+            if successor is successor.parent.left_child:  # successor 노드가 부모 노드의 왼쪽 자식인 경우
+                successor.parent.left_child = successor.right_child  # successor 노드의 부모 노드의 왼쪽 자식으로, successor 노드의 오른쪽 자식 노드(없으면 None) 연결
+            else:  # successor 노드가 부모 노드의 오른쪽 자식인 경우
+                successor.parent.right_child = successor.right_child
+
+            if successor.right_child is not None:  # successor 노드의 오른쪽 자식 노드가 있는 경우
+                successor.right_child.parent = successor.parent  # 해당 노드의 부모 노드로, successor 노드의 부모 노드 연결
+
+
+    def print_sorted_tree(self):
+        """이진 탐색 트리 내의 데이터를 정렬된 순서로 출력해주는 메소드"""
+        print_inorder(self.root)  # root 노드를 in-order로 출력한다
+        print()
+
+    @staticmethod
+    def find_min(node):
+        """해당 노드를 루트 노드로 갖는 (부분) 이진 탐색 트리의 가장 작은 노드를 리턴"""
+        current_node = node
+
+        while current_node.left_child is not None:
+            current_node = current_node.left_child
+        return current_node
+
+
+# 빈 이진 탐색 트리 생성
+bst = BinarySearchTree()
+
+# 데이터 삽입
+bst.insert(7)
+bst.insert(11)
+bst.insert(9)
+bst.insert(17)
+bst.insert(8)
+bst.insert(5)
+bst.insert(19)
+bst.insert(3)
+bst.insert(2)
+bst.insert(4)
+bst.insert(14)
+
+# 이진 탐색 트리 출력
+bst.print_sorted_tree()
+
+# 이진 탐색 트리 탐색 및 노드 출력
+print(bst.search(9))
+
+# 부분 이진 탐색 트리의 가장 작은 노드 출력
+print(bst.find_min(bst.root).data)
+
+# 이진 탐색 트리 노드 삭제
+bst.delete(7)
+bst.delete(11)
+bst.delete(19)
+bst.print_sorted_tree()
+
+# 이진 탐색 트리 연산 (h : 트리의 높이)
+# 삽입, 탐색, 삭제 : O(h) (평균적으로 O(log(n)), 최악의 경우 O(n))
+# 이진 탐색 트리는 데이터 사이에 순서를 저장해주는 자료구조이므로, 해시 테이블로 구현할 수 없는 정렬 기능을 구현할 수 있다.
+# 딕셔너리의 key를 정렬된 상태로 사용하고 싶을 때 이진 탐색 트리를 사용한다.(연산의 효율성은 떨어짐)
+'''
+
+
+## 그래프
+# 연결 데이터를 저장할 수 있는 자료구조
+
+# 노드(정점, Vertex) : 그래프에서 하나의 데이터 단위를 나타내는 객체
+# 엣지(Edge) : 그래프에서 두 노드의 직접적인 연결 관계 데이터 / 두 노드 사이에 엣지가 있을 때, 두 노드는 "인접해 있다"라고 표현한다.
+    # 유향 그래프(dirceted graph) : 방향 그래프에서는 엣지들이 방향을 갖는다. -> 일방적인 관계를 나타낼 수 있다.
+    # 가중치 그래프(weighted graph) : 엣지들이 어떤 정보를 나타내는 수치를 갖는다.
+# 차수 : 하나의 노드에 연결된 엣지들의 수
+    # 무향 그래프에서는 하나의 노드에 연결된 엣지들의 수를 나타낸다.
+    # 유향 그래프에서는 노드를 떠나는 엣지의 수를 출력 차수, 노드에 들어오는 엣지의 수를 입력 차수로 구별해서 부른다.
+# 경로 : 한 노드에서 다른 노드까지 가는 길
+    # 경로의 거리
+        # 비가중치 그래프 : 한 경로에 있는 엣지의 수
+        # 가중치 그래프 : 한 경로에 있는 엣지의 가중치의 합
+    # 최단 경로 : 두 노드 사이의 경로 중 거리가 가장 짧은 경로
+# 사이클 : 한 노드에서 시작해서 같은 노드로 돌아오는 경로
+
+# 엣지의 구현
+# 1. 인접 행렬
+
+# 모든 요소를 0으로 초기화시킨 크기 6 x 6 인접 행렬
+adjacency_matrix = [[0 for i in range(6)] for i in range(6)]
+adjacency_matrix[0] = [0,1,1,0,0,0]
+adjacency_matrix[1] = [1,0,0,1,0,1]
+adjacency_matrix[2] = [1,0,0,0,0,1]
+adjacency_matrix[3] = [0,1,0,0,1,1]
+adjacency_matrix[4] = [0,0,0,1,0,1]
+adjacency_matrix[5] = [0,1,1,1,1,0]
+
+print(adjacency_matrix)
+
+# 2. 인접 리스트
+# 각 노드의 엣지를 리스트에 저장하는 방법
+# 노드의 개수가 n개인 그래프라면, n개의 연결 리스트로 구성 (연결리스트가 없는 경우, 즉 차수가 0인 경우 포인터 변수의 값은 null이 된다.)
+
+# 무향 그래프
+graph = {'A': set(['B', 'C']),
+	'B': set(['A', 'D']),
+        'C': set(['A', 'E', 'F']),
+        'D': set(['B', 'E', 'G']),
+        'E': set(['C', 'D', 'H']),
+        'F': set(['C']),
+        'G': set(['D']),
+        'H': set(['E'])}
+
+
+#인접 행렬과 인접 리스트 비교
+
+# V (Vertex) : 그래프 안에 있는 모든 노드들의 집합 (모든 노드의 수)
+# E (Edge) : 그래프 안에 있는 모든 엣지들의 집합 (모든 엣지의 수)
+
+# 노드 수가 V 일 때, 무방향 그래프는 V^2/2, 방향 그래프는 V^2개의 엣지를 갖는다.
+# 인접 행렬 공간 복잡도 : O(V^2)
+# 인접 리스트 공간 복잡도 : O(V + E) (인접 리스트 자체를 저장하는데 O(V), 엣지 저장 하는데 O(E)) (최악의 경우 O(V^2))
+
+
+# 그래프 탐색
+# 하나의 시작점 노드에서 연결된 노드들을 모두 찾는 것
+
+
+## BFS(Breadth First Search) (너비 우선 탐색)
+# 그래프를 너비 우선적으로 탐색
+
+# 시작 노드를 방문 후, 큐에 넣는다.
+# 큐에 아무 노드가 없을 때까지
+    # 큐 가장 앞 노드를 꺼낸다
+    # 꺼낸 노드에 인접한 노드들을 모두 보면서
+        # 처음 방문한 노드면
+            # 방문한 노드 표시를 해준다
+            # 큐에 넣어준다.
+
+from collections import deque
+
+graph_list = {'A': set(['B', 'C']),
+	'B': set(['A', 'D']),
+        'C': set(['A', 'E', 'F']),
+        'D': set(['B', 'E', 'G']),
+        'E': set(['C', 'D', 'H']),
+        'F': set(['C']),
+        'G': set(['D']),
+        'H': set(['E'])}
+root_node = 'A'
+
+def BFS_with_adj_list(graph, root):
+    """인접 리스트와 큐를 이용한 BFS 탐색 메소드"""
+    visited = []  # 방문한 노드가 담길 리스트
+    queue = deque([root])
+
+    while queue:
+        n = queue.popleft()
+        if n not in visited:
+            visited.append(n)
+            queue += graph[n] - set(visited)
+    return visited
+
+print(BFS_with_adj_list(graph_list, root_node))
+
+
+## DFS(Depth First Search) (깊이 우선 탐색)
+# 그래프를 너비 우선적으로 탐색
+
+# 시작 노드를 옅은 회색 표시 후, 스택에 넣는다.
+# 스택에 아무 노드가 없을 때까지
+    # 스택 가장 위 노드를 꺼낸다
+    # 노드를 방문(진한 회색) 표시한다.
+    # 인접한 노드들을 모두 보면서
+        # 처음 방문하고나 스택에 없는 노드면:
+            # 옅은 회색 표실르 해준다.
+            # 스택에 넣어준다.
+
+def DFS_with_adj_list(graph, root):
+    visited = []
+    stack = [root]
+
+    while stack:
+        n = stack.pop()
+        if n not in visited:
+            visited.append(n)
+            stack += graph[n] - set(visited)
+    return visited
+
+print(DFS_with_adj_list(graph_list, root_node))
+
+# DFS, BFS 시간 복잡도 : O(V + E)
