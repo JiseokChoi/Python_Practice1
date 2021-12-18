@@ -680,13 +680,13 @@ print(set1)
 # 데이터의 상-하 관계(계층적 관계)를 저장하는 자료구조
 # 다양한 추상 자료형의 구현이 가능 ex) 우선순위 큐, 딕셔너리, 세트 등
 
-# 루트(root) 노드 : 트리의 시작 노드
+# 루트(start) 노드 : 트리의 시작 노드
 # 부모 노드 : 특정 노드의 직속 상위 노드
 # 자식 노드 : 특정 노드의 직속 하위 노드
 # 형제 노드 : 같은 부모를 갖는 노드
 # leaf 노드(말단 노드) : 자식 노드를 갖고 있지 않은, 가장 말단에 있는 노드
-# 깊이 : 특정 노드가 root 노드에서 떨어져 있는 거리 (root 노드의 자식 노드의 깊이는 1)
-# 레벨 : 깊이 + 1. 깊이와 거의 같은 개념 (root 노드의 자식 노드의 레벨은 2)
+# 깊이 : 특정 노드가 start 노드에서 떨어져 있는 거리 (start 노드의 자식 노드의 깊이는 1)
+# 레벨 : 깊이 + 1. 깊이와 거의 같은 개념 (start 노드의 자식 노드의 레벨은 2)
 # 높이 : 트리에서 가장 깊이 있는 노드의 깊이
 # 부분 트리(sub-tree) : 현재 트리의 일부분을 이루고 있는 더 작은 트리
 
@@ -717,7 +717,7 @@ root_node.right_child = node_C
 node_B.left_child = node_D
 node_B.right_child = node_E
 
-# root 노드의 왼쪽 자식 노드 가져오기
+# start 노드의 왼쪽 자식 노드 가져오기
 test_node_1 = root_node.left_child
 print(test_node_1.data)
 
@@ -737,7 +737,7 @@ print(test_node_1.data)
 
 
 # 완전 이진 트리 배열(파이썬 리스트)에 저장하기
-complete_binary_tree = [None, 1, 5, 12, 11, 9, 10, 14, 2, 10]  # 첫 번째 인덱스 : root 노드
+complete_binary_tree = [None, 1, 5, 12, 11, 9, 10, 14, 2, 10]  # 첫 번째 인덱스 : start 노드
 
 # 완전 이진 트리 배열 자식 노드 찾는 방법
 # 2p (p : 부모 노드의 인덱스)
@@ -748,7 +748,7 @@ complete_binary_tree = [None, 1, 5, 12, 11, 9, 10, 14, 2, 10]  # 첫 번째 인�
 
 def get_parent(complete_binary_tree: list, index):
     """배열로 구현한 완전 이진 트리에서 index번째 노드의 부모 노드의 데이터 리턴"""
-    return complete_binary_tree[index // 2] if index != 0 else None  # root 노드일 경우, None 리턴
+    return complete_binary_tree[index // 2] if index != 0 else None  # start 노드일 경우, None 리턴
 
 def get_left_child(complete_binary_tree: list, index):
     """배열로 구현한 완전 이진 트리에서 index번째 노드의 왼쪽 자식 노드의 데이터 리턴"""
@@ -885,7 +885,7 @@ print(test_tree) # 힙으로 만들어진 트리 출력
 # 내림차순으로 정렬하고 싶을 경우-> 힙 속성을 반대로 바꾸고 똑같은 알고리즘을 적용하면 된다.
 
 def heap_sort(tree):
-    """힙 정렬(heap-sort) 메소드"""
+    """힙 정렬(heap_test_1-sort) 메소드"""
     tree_size = len(tree)
 
     making_heap(tree) # 1번 과정
@@ -925,10 +925,10 @@ print(priority_queue.queue)
 # 2) 삽입한 데이터와 부모 노드의 데이터를 비교한다.
 
 # 힙에서 최고 우선순위 데이터 추출하기 (최고 우선 순위 : 가장 큰 데이터(root_node의 데이터))
-# 1) root 노드와 마지막 노드를 서로 바꾼다.
+# 1) start 노드와 마지막 노드를 서로 바꾼다.
 # 2) 마지막 노드의 데이터를 변수에 저장한다.
 # 3) 마지막 노드를 삭제한다.
-# 4) root 노드에 heapify를 호출해서 망가진 힙 속성을 고친다.
+# 4) start 노드에 heapify를 호출해서 망가진 힙 속성을 고친다.
 # 변수에 저장한 데이터를 리턴한다.(최고 우선 순위 데이터)
 
 def reverse_heapify(tree, index):
@@ -942,22 +942,22 @@ def reverse_heapify(tree, index):
 class PriorityQueue:
     """힙으로 구현한 우선순위 큐 클래스"""
     def __init__(self):
-        self.heap = [None]  # 파이썬 리스트로 구현한 힙
+        self.heap_test_1 = [None]  # 파이썬 리스트로 구현한 힙
 
     def __str__(self):
-        return str(self.heap)
+        return str(self.heap_test_1)
 
     def insert(self, data):
         """삽입 메소드"""  # 시간 복잡도 : O(log(n))
-        self.heap.append(data)  # 맨 마지막 인덱스에 데이터 추가
+        self.heap_test_1.append(data)  # 맨 마지막 인덱스에 데이터 추가
 
-        reverse_heapify(self.heap, len(self.heap) - 1)  # 맨 마지막에 추가된 데이터에 대해 reverse_heapify 실행
+        reverse_heapify(self.heap_test_1, len(self.heap_test_1) - 1)  # 맨 마지막에 추가된 데이터에 대해 reverse_heapify 실행
 
     def extract_max(self):
         """최고 우선 순위 데이터 추출 메소드"""  # 시간 복잡도 : O(log(n))
-        swap(self.heap, 1, -1)  #
-        return_value = self.heap.pop()
-        heapify(self.heap, 1, len(self.heap))
+        swap(self.heap_test_1, 1, -1)  #
+        return_value = self.heap_test_1.pop()
+        heapify(self.heap_test_1, 1, len(self.heap_test_1))
 
         return return_value
 
@@ -1005,18 +1005,18 @@ def print_inorder(node):
 class BinarySearchTree:
     """이진 탐색 트리 클래스"""
     def __init__(self):
-        self.root = None
+        self.start = None
 
     def insert(self, data):
         """이진 탐색 트리 삽입 메소드. 해당 데이터를 가지고 있는 노드로 접근하여 그 노드를 리턴한다."""
         new_node = Node(data)  # 삽입할 데이터를 갖는 새 노드 생성
 
-        # 트리가 비었으면 새로운 노드를 root 노드로 만든다
-        if self.root is None:
-            self.root = new_node
+        # 트리가 비었으면 새로운 노드를 start 노드로 만든다
+        if self.start is None:
+            self.start = new_node
             return
 
-        cur_node = self.root  # 삽입될 노드와 비교 대상이 될 노드
+        cur_node = self.start  # 삽입될 노드와 비교 대상이 될 노드
 
         while True:
             if cur_node.data <= new_node.data:  # 현재 노드의 데이터가, 삽입될 노드의 데이터보다 크거나 같은 경우
@@ -1034,7 +1034,7 @@ class BinarySearchTree:
 
     def search(self, data):
         """이진 탐색 트리 탐색 메소드, 찾는 데이터를 갖는 노드가 없으면 None을 리턴한다"""
-        current_node = self.root
+        current_node = self.start
 
         while True:
             if current_node is None:  # 현재 노드가 비어 있는 경우
@@ -1052,8 +1052,8 @@ class BinarySearchTree:
 
         # 경우 1) 삭제하려는 노드가 leaf 노드인 경우
         if (node_to_delete.left_child is None) and (node_to_delete.right_child is None):
-            if node_to_delete is self.root:  # 삭제하려는 노드가 루트 노드인 경우
-                self.root = None
+            if node_to_delete is self.start:  # 삭제하려는 노드가 루트 노드인 경우
+                self.start = None
             else:
                 if node_to_delete is parent_node.left_child:  # 삭제하려는 노드가 왼쪽 자식 노드인 경우
                     parent_node.left_child = None
@@ -1062,9 +1062,9 @@ class BinarySearchTree:
 
         # 경우 2) 삭제하려는 노드의 자식이 하나인 노드일 경우
         elif node_to_delete.left_child is None:  # 삭제하려는 노드의 오른쪽 자식 노드만 있는 경우
-            if node_to_delete is self.root:  # 루트 노드를 삭제하려는 경우
-                self.root = node_to_delete.right_child
-                self.root.parent = None
+            if node_to_delete is self.start:  # 루트 노드를 삭제하려는 경우
+                self.start = node_to_delete.right_child
+                self.start.parent = None
             elif node_to_delete is parent_node.left_child:  # 삭제하려는 노드가 부모 노드의 왼쪽 자식 노드인 경우
                 parent_node.left_child = node_to_delete.right_child  # 부모 노드의 왼쪽 자식 노드로, 삭제하려는 노드의 오른쪽 자식 노드 연결
                 node_to_delete.right_child.parent = parent_node  # 삭제하려는 노드의 오른쪽 자식 노드의 부모 노드로, 삭제하려는 노드의 부모 노드 연결
@@ -1073,9 +1073,9 @@ class BinarySearchTree:
                 node_to_delete.right_child.parent = parent_node
 
         elif node_to_delete.right_child is None:  # 삭제하려는 노드의 왼쪽 자식 노드만 있는 경우
-            if node_to_delete is self.root:  # 루트 노드를 삭제하려는 경우
-                self.root = node_to_delete.left_child
-                self.root.parent = None
+            if node_to_delete is self.start:  # 루트 노드를 삭제하려는 경우
+                self.start = node_to_delete.left_child
+                self.start.parent = None
             elif node_to_delete is parent_node.left_child:  # 삭제하려는 노드가 부모 노드의 왼쪽 자식 노드인 경우
                 parent_node.left_child = node_to_delete.left_child
                 node_to_delete.left_child.parent = parent_node
@@ -1099,7 +1099,7 @@ class BinarySearchTree:
 
     def print_sorted_tree(self):
         """이진 탐색 트리 내의 데이터를 정렬된 순서로 출력해주는 메소드"""
-        print_inorder(self.root)  # root 노드를 in-order로 출력한다
+        print_inorder(self.start)  # start 노드를 in-order로 출력한다
         print()
 
     @staticmethod
@@ -1135,7 +1135,7 @@ bst.print_sorted_tree()
 print(bst.search(9))
 
 # 부분 이진 탐색 트리의 가장 작은 노드 출력
-print(bst.find_min(bst.root).data)
+print(bst.find_min(bst.start).data)
 
 # 이진 탐색 트리 노드 삭제
 bst.delete(7)
@@ -1171,6 +1171,8 @@ bst.print_sorted_tree()
 # 1. 인접 행렬
 
 # 모든 요소를 0으로 초기화시킨 크기 6 x 6 인접 행렬
+import heapq
+
 adjacency_matrix = [[0 for i in range(6)] for i in range(6)]
 adjacency_matrix[0] = [0,1,1,0,0,0]
 adjacency_matrix[1] = [1,0,0,1,0,1]
@@ -1233,10 +1235,11 @@ graph_list = {'A': set(['B', 'C']),
         'H': set(['E'])}
 root_node = 'A'
 
-def BFS_with_adj_list(graph, root):
+
+def BFS_with_adj_list(graph, start):
     """인접 리스트와 큐를 이용한 BFS 탐색 메소드"""
     visited = []  # 방문한 노드가 담길 리스트
-    queue = deque([root])
+    queue = deque([start])
 
     while queue:
         n = queue.popleft()
@@ -1260,9 +1263,9 @@ print(BFS_with_adj_list(graph_list, root_node))
             # 옅은 회색 표실르 해준다.
             # 스택에 넣어준다.
 
-def DFS_with_adj_list(graph, root):
+def DFS_with_adj_list(graph, start):
     visited = []
-    stack = [root]
+    stack = [start]
 
     while stack:
         n = stack.pop()
@@ -1274,3 +1277,170 @@ def DFS_with_adj_list(graph, root):
 print(DFS_with_adj_list(graph_list, root_node))
 
 # DFS, BFS 시간 복잡도 : O(V + E)
+
+
+## 최단 경로 알고리즘
+
+# 1. 최단 경로 알고리즘 - BFS
+
+# 시작 노드를 방문 표시 후, 큐에 넣는다.
+# 큐에 아무 노드가 없을 때까지
+    # 큐 가장 앞 노드를 꺼낸다.
+    # 꺼낸 노드에 인접한 노드들을 모두 보면서
+        # 처음 방문한 노드면
+            # 방문한 노드 표시를 해준다.
+            # predecessor 변수를 큐에서 꺼낸 노드로 설정한다.
+            # 큐에 넣어준다.
+
+# BackTracking
+    # 현재 노드를 경로에 추가한다.
+    # 현재 노드의 predecessor로 간다.
+    # predecessor가 없을 때까지 위 단계들을 반복한다.
+
+graph_list = {'A': set(['B', 'C']),
+	'B': set(['A', 'D']),
+        'C': set(['A', 'E', 'F']),
+        'D': set(['B', 'E', 'G']),
+        'E': set(['C', 'D', 'H']),
+        'F': set(['C', 'I']),
+        'G': set(['D']),
+        'H': set(['E']),
+        'I': set(['F'])}
+start = 'A'
+destination = 'I'
+
+
+def BFS_shortest_path(graph, start, destination):
+    """인접 리스트와 큐를 이용한 BFS 최단경로 탐색 메소드"""
+    visited = []  # 방문한 노드가 담길 리스트
+    queue = deque([start])
+
+    predecessor_list = {}  # predecssor가 담길 리스트
+    for key in graph_list.keys():
+        predecessor_list[key] = None
+
+    while queue:
+        n = queue.popleft()  # BFS 알고리즘과 동일
+        if n not in visited:
+            visited.append(n)
+            queue += graph[n] - set(visited)
+
+            for i in graph[n]:  # n에 인접한 노드들을 돌면서
+                if (predecessor_list[i] is None) and (i is not start):  # predecessor가 설정되어 있지 않고, 루트 노드가 아닌 경우
+                    predecessor_list[i] = n  # predecessor 설정
+
+    # Back Tracking
+    current_node = destination  # 탐색을 시작한 현재 노드로, destination 설정
+    res_str = current_node  # 경로가 추가될 문자열
+    while predecessor_list[current_node] is not None:
+        res_str = f"{predecessor_list[current_node]}->{res_str}"
+        current_node = predecessor_list[current_node]
+
+    return f'The shortest path from "{start}" to" {destination}" in this graph  : "{res_str}"'
+
+print(BFS_shortest_path(graph_list, start, destination))
+
+
+# 2. 최단 경로 알고리즘 - 다익스트라(Dijkstra)
+
+# 파이썬 heapq 모듈
+# 파이썬의 일반 리스트를 마치 최소 힙처럼 다룰 수 있게 해준다.
+import heapq
+
+heap_test_1 = []
+
+# 힙에 원소 추가
+heapq.heappush(heap_test_1, 4)
+heapq.heappush(heap_test_1, 1)
+heapq.heappush(heap_test_1, 7)
+heapq.heappush(heap_test_1, 3)
+heapq.heappush(heap_test_1, 5)
+print(heap_test_1)
+
+# 힙에서 원소 삭제
+print(heapq.heappop(heap_test_1))
+print(heap_test_1)
+
+heap_test_2 = [4,13,17,6,2,1,5]
+heapq.heapify(heap_test_2)
+print(heap_test_2)
+
+
+# 응용 1) 최대 힙
+nums = [4, 1, 7, 3, 8, 5]
+heap = []
+max_heap = []
+for num in nums:
+  heapq.heappush(heap, (-num, num))  # (우선 순위, 값)
+
+while heap:
+  max_heap.append(heapq.heappop(heap)[1])
+
+print(max_heap)
+
+
+# 응용 2) K번째 최소값/최대값
+def kth_smallest(nums, k):
+  heap = []
+  for num in nums:
+    heapq.heappush(heap, num)
+
+  kth_min = None
+  for _ in range(k):
+    kth_min = heapq.heappop(heap)
+  return kth_min
+
+print(kth_smallest([4, 1, 7, 3, 8, 5], 3))
+
+
+# 응용 3) 힙 정렬
+def heap_sort(nums):
+  heap = []
+  for num in nums:
+    heapq.heappush(heap, num)
+
+  sorted_nums = []
+  while heap:
+    sorted_nums.append(heapq.heappop(heap))
+  return sorted_nums
+
+print(heap_sort([4, 1, 7, 3, 8, 5]))
+
+
+# 다익스트라 알고리즘 구현
+
+import heapq
+import sys
+
+def dijkstra(start):
+    distances = {node : sys.maxsize for node in graph}  # 초기 배열 설정
+    distances[start] = 0  # 시작 노드 distance는 0으로 설정
+    queue = []
+
+    heapq.heappush(queue, (distances[startp], start))  # (거리, 노드) -> heapq 모듈에서 첫 번째 데이터를 기준으로 정렬하기 때문
+
+    while queue:  # 우선 순위 큐에 데이터가 없을 때까지
+        current_dist, node = heapq.heappop(queue)  # 가장 낮은 거리를 가진 노드와 거리 추출
+
+        if distances[node] < current_dist:  # (거리, 노드)의 형태로 저장되어, 동일한 노드도 큐에 저장되는데, 이를 해결하기 위함
+            continue
+
+        for adj_node, dist in graph[node].items():  # 대상인 노드에서 인접한 노드와 거리를 순회
+            weighted_dist = current_dist + dist  # 현재 노드에서 인접한 노드를 지나갈 때까지의 거리를 더함
+            if weighted_dist < distances[adj_node]:  # 배열의 저장된 거리보다 위의 가중치가 더 작으면 해당 노드의 거리 변경
+                distances[adj_node] = weighted_dist
+
+                heapq.heappush(queue, (weighted_dist, adj_node))
+
+    return distances
+
+graph = {
+    'A' : {'B':10, 'C':3},
+    'B' : {'C':1, 'D':2},
+    'C' : {'B':4, 'D':8, 'E':2},
+    'D' : {'E':7},
+    'E' : {'D':9}
+}
+
+result = dijkstra('A')
+print(result)
